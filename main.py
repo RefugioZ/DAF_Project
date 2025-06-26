@@ -29,7 +29,7 @@ df['(4)T.Min'] = pd.to_numeric(df['(4)T.Min'], errors='coerce')
 df['(5)Rain'] = pd.to_numeric(df['(5)Rain'], errors='coerce') # Convert to numeric
 
 df['Mean_Temp'] = (df['(3)T.Max'] + df['(4)T.Min']) / 2 
-df['(2)Date'] = pd.to_datetime(df['(2)Date'], dayfirst=True, errors='coerce')
+df['(2)Date'] = pd.to_datetime(df['(2)Date'], dayfirst=True, format='%d/%m/%Y', errors='coerce')
 
 print("Daily Mean Temperature and Precipitation")
 print("--------------------------------------------------") 
@@ -47,6 +47,9 @@ for day in range(1, 32):
 
 plt.figure(figsize=(10, 6))
 plt.scatter(daily_mean_temp, daily_precipitation, label='Daily Mean Temp / Daily Precipitation', color='blue', alpha=0.6)
+
+for day, x, y in zip(range(1, 32), daily_mean_temp, daily_precipitation):
+    plt.text(x, y, day, fontsize=10, ha='left', va='bottom')
 
 plt.xlabel('Daily Temperature Mean (°C)')
 plt.ylabel('Daily Precipitation (mm)')
@@ -78,6 +81,9 @@ for month in range(1, 13):
 plt.figure(figsize=(10, 6))
 plt.scatter(monthly_mean_temp, monthly_precipitation, label='Monthly Mean Temp / Monthly Precipitation', color='blue', alpha=0.6)
 
+for month, x, y in zip(range(1, 13), monthly_mean_temp, monthly_precipitation):
+    plt.text(x, y, month, fontsize=10, ha='left', va='bottom')
+
 plt.xlabel('Monthly Temperature Mean (°C)')
 plt.ylabel('Monthly Precipitation (mm)')
 plt.title('Monthly Temperature Mean and Precipitation')
@@ -106,6 +112,9 @@ for year in range(1985, 1996):
 
 plt.figure(figsize=(10, 6))
 plt.scatter(yearly_mean_temp, yearly_precipitation, label='Yearly Mean Temp / Yearly Precipitation', color='blue', alpha=0.6)
+
+for year, x, y in zip(range(1985, 1996), yearly_mean_temp, yearly_precipitation):
+    plt.text(x, y, year, fontsize=10, ha='left', va='bottom')
 
 plt.xlabel('Yearly Temperature Mean (°C)')
 plt.ylabel('Yearly Precipitation (mm)')
