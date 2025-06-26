@@ -2,11 +2,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
+import calendar
 
-df = pd.read_csv('.\Data\Input_Climate.csv')
-
-#print(df.head())
-#print(df.columns)
+df = pd.read_csv('./Data/Input_Climate.csv')
 
 #Objectives:
 #The objective of this tutorial is to become familiar with hydrologic data processing in R or Python. 
@@ -25,40 +23,95 @@ df = pd.read_csv('.\Data\Input_Climate.csv')
 #3. Compute mean annual precipitation and temperature and plot the results. 
 #4. Compute trends in annual precipitation and temperature and plot the results. 
 
-#1 Assignment:
-
+#Data Formatting:
 df['(3)T.Max'] = pd.to_numeric(df['(3)T.Max'], errors='coerce') # Convert to numeric
 df['(4)T.Min'] = pd.to_numeric(df['(4)T.Min'], errors='coerce')
+df['(5)Rain'] = pd.to_numeric(df['(5)Rain'], errors='coerce') # Convert to numeric
 
 df['Mean_Temp'] = (df['(3)T.Max'] + df['(4)T.Min']) / 2 
-print(df[['(3)T.Max','(4)T.Min','Mean_Temp']].head())
-
-
-#Subsetting into it respecive month 
 df['(2)Date'] = pd.to_datetime(df['(2)Date'], dayfirst=True, errors='coerce')
 
-january_df = df[df['(2)Date'].dt.month == 1]
-february_df = df[df['(2)Date'].dt.month == 2]
-march_df = df[df['(2)Date'].dt.month == 3]
-april_df = df[df['(2)Date'].dt.month == 4]
-may_df = df[df['(2)Date'].dt.month == 5]
-june_df = df[df['(2)Date'].dt.month == 6]
-july_df = df[df['(2)Date'].dt.month == 7]
-august_df = df[df['(2)Date'].dt.month == 8]
-september_df = df[df['(2)Date'].dt.month == 9]
-october_df = df[df['(2)Date'].dt.month == 10]
-november_df = df[df['(2)Date'].dt.month == 11]
-december_df = df[df['(2)Date'].dt.month == 12]
+print("Daily Mean Temperature and Precipitation")
+print("--------------------------------------------------") 
+daily_mean_temp = []
+daily_precipitation = []
 
-january_df.iloc[1:].to_csv('January_Temp.csv', index=False)
-february_df.iloc[1:].to_csv('February_Temp.csv', index=False)
-march_df.iloc[1:].to_csv('March_Temp.csv', index=False)
-april_df.iloc[1:].to_csv('April_Temp.csv', index=False)
-may_df.iloc[1:].to_csv('May_Temp.csv', index=False)
-june_df.iloc[1:].to_csv('June_Temp.csv', index=False)
-july_df.iloc[1:].to_csv('July_Temp.csv', index=False)
-august_df.iloc[1:].to_csv('August_Temp.csv', index=False)
-september_df.iloc[1:].to_csv('September_Temp.csv', index=False)
-october_df.iloc[1:].to_csv('October_Temp.csv', index=False)
-november_df.iloc[1:].to_csv('November_Temp.csv', index=False)
-december_df.iloc[1:].to_csv('December_Temp.csv', index=False)
+for day in range(1, 32):
+    day_df = df[df['(2)Date'].dt.day == day]
+    day_mean_temp = day_df['Mean_Temp'].astype(float).mean()
+    day_precipitation = day_df['(5)Rain'].astype(float).sum()
+    print(f"Day: {day}, Mean Temp: {day_mean_temp:.2f}, Precipitation: {day_precipitation:.2f}")
+
+    daily_mean_temp.append(day_mean_temp)
+    daily_precipitation.append(day_precipitation)
+
+plt.figure(figsize=(10, 6))
+plt.scatter(daily_mean_temp, daily_precipitation, label='Daily Mean Temp / Daily Precipitation', color='blue', alpha=0.6)
+
+plt.xlabel('Daily Temperature Mean (°C)')
+plt.ylabel('Daily Precipitation (mm)')
+plt.title('Daily Temperature Mean and Precipitation')
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+
+print()
+
+
+monthly_mean_temp = []
+monthly_precipitation = []
+
+print("Monthly Mean Temperature and Precipitation")
+print("--------------------------------------------------")
+for month in range(1, 13):
+    month_df = df[df['(2)Date'].dt.month == month]
+    month_mean_temp = month_df['Mean_Temp'].astype(float).mean()
+    month_precipitation = month_df['(5)Rain'].astype(float).sum()
+    print(f"Month: {month}, Mean Temp: {month_mean_temp:.2f}, Precipitation: {month_precipitation:.2f}")
+
+    monthly_mean_temp.append(month_mean_temp)
+    monthly_precipitation.append(month_precipitation)
+
+plt.figure(figsize=(10, 6))
+plt.scatter(monthly_mean_temp, monthly_precipitation, label='Monthly Mean Temp / Monthly Precipitation', color='blue', alpha=0.6)
+
+plt.xlabel('Monthly Temperature Mean (°C)')
+plt.ylabel('Monthly Precipitation (mm)')
+plt.title('Monthly Temperature Mean and Precipitation')
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+print()
+
+
+print("Yearly Mean Temperature and Precipitation")
+print("--------------------------------------------------")
+yearly_mean_temp = []
+yearly_precipitation = []
+
+for year in range(1985, 1996):
+    year_df = df[df['(2)Date'].dt.year == year]
+    year_mean_temp = year_df['Mean_Temp'].astype(float).mean()
+    year_precipitation = year_df['(5)Rain'].astype(float).sum()
+    print(f"Year: {year}, Mean Temp: {year_mean_temp:.2f}, Precipitation: {year_precipitation:.2f}")
+
+    yearly_mean_temp.append(year_mean_temp)
+    yearly_precipitation.append(year_precipitation)
+
+plt.figure(figsize=(10, 6))
+plt.scatter(yearly_mean_temp, yearly_precipitation, label='Yearly Mean Temp / Yearly Precipitation', color='blue', alpha=0.6)
+
+plt.xlabel('Yearly Temperature Mean (°C)')
+plt.ylabel('Yearly Precipitation (mm)')
+plt.title('Yearly Temperature Mean and Precipitation')
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
