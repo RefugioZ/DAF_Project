@@ -31,6 +31,7 @@ df['(5)Rain'] = pd.to_numeric(df['(5)Rain'], errors='coerce') # Convert to numer
 df['Mean_Temp'] = (df['(3)T.Max'] + df['(4)T.Min']) / 2 
 df['(2)Date'] = pd.to_datetime(df['(2)Date'], dayfirst=True, format='%d/%m/%Y', errors='coerce')
 
+#This is for Question 1 
 print("Daily Mean Temperature and Precipitation")
 print("--------------------------------------------------") 
 daily_mean_temp = []
@@ -46,14 +47,20 @@ for day in range(1, 32):
     daily_precipitation.append(day_precipitation)
 
 plt.figure(figsize=(10, 6))
-plt.scatter(daily_mean_temp, daily_precipitation, label='Daily Mean Temp / Daily Precipitation', color='blue', alpha=0.6)
+plt.plot(range(1,32), daily_precipitation, marker ='o', label='Daily Precipitation Over Time', color='blue', alpha=0.6)
+plt.xlabel('Day of Month')
+plt.ylabel('Daily Total Precipitation (mm)')
+plt.title('Daily Total Percipitation Over a Month')
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
 
-for day, x, y in zip(range(1, 32), daily_mean_temp, daily_precipitation):
-    plt.text(x, y, day, fontsize=10, ha='left', va='bottom')
-
-plt.xlabel('Daily Temperature Mean (°C)')
-plt.ylabel('Daily Precipitation (mm)')
-plt.title('Daily Temperature Mean and Precipitation')
+plt.plot(range(1,32), daily_mean_temp, marker='s', label='Daily Mean Temp', color='red', alpha=0.6)
+plt.xlabel('Day of Month')
+plt.ylabel('Daily Mean Temperature (°C)')
+plt.title('Daily Mean Temperature Over a Month')
 plt.xticks(rotation=45)
 plt.grid(True)
 plt.legend()
@@ -63,10 +70,9 @@ plt.show()
 
 print()
 
-
+#This is for Question 2
 monthly_mean_temp = []
 monthly_precipitation = []
-
 print("Monthly Mean Temperature and Precipitation")
 print("--------------------------------------------------")
 for month in range(1, 13):
@@ -79,14 +85,21 @@ for month in range(1, 13):
     monthly_precipitation.append(month_precipitation)
 
 plt.figure(figsize=(10, 6))
-plt.scatter(monthly_mean_temp, monthly_precipitation, label='Monthly Mean Temp / Monthly Precipitation', color='blue', alpha=0.6)
+plt.plot(range(1,13), monthly_precipitation,marker ='o',  label='Monthly Precipitation', color='blue', alpha=0.6)
+plt.xlabel('Month of a Year')
+plt.ylabel('Monthly Total Precipitation (mm)')
+plt.title('Monthly Total Precipitation over a Year')
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
 
-for month, x, y in zip(range(1, 13), monthly_mean_temp, monthly_precipitation):
-    plt.text(x, y, month, fontsize=10, ha='left', va='bottom')
-
-plt.xlabel('Monthly Temperature Mean (°C)')
-plt.ylabel('Monthly Precipitation (mm)')
-plt.title('Monthly Temperature Mean and Precipitation')
+plt.figure(figsize=(10, 6))
+plt.plot(range(1,13), monthly_mean_temp,marker='s',  label='Monthly Mean Temp Per Year', color='red', alpha=0.6)
+plt.xlabel('Month of a Year')
+plt.ylabel('Monthly Mean Temperature (°C)')
+plt.title('Monthly Mean Temperature over a Year')
 plt.xticks(rotation=45)
 plt.grid(True)
 plt.legend()
@@ -95,30 +108,80 @@ plt.show()
 
 print()
 
-
-print("Yearly Mean Temperature and Precipitation")
+print("Annual Mean Temperature and Precipitation")
 print("--------------------------------------------------")
 yearly_mean_temp = []
-yearly_precipitation = []
+yearly_mean_precipitation = []
 
 for year in range(1985, 1996):
     year_df = df[df['(2)Date'].dt.year == year]
     year_mean_temp = year_df['Mean_Temp'].astype(float).mean()
-    year_precipitation = year_df['(5)Rain'].astype(float).sum()
-    print(f"Year: {year}, Mean Temp: {year_mean_temp:.2f}, Precipitation: {year_precipitation:.2f}")
+    year_mean_precipitation = year_df['(5)Rain'].astype(float).mean()
+    print(f"Year: {year}, Mean Temp: {year_mean_temp:.2f}, Precipitation: {year_mean_precipitation:.2f}")
 
+    yearly_mean_temp.append(year_mean_temp)
+    yearly_mean_precipitation.append(year_mean_precipitation)
+
+#This if for Question 3
+plt.figure(figsize=(10, 6))
+plt.plot(range(1985,1996), yearly_mean_precipitation, marker ='o',  label='Yearly Precipitation', color='blue', alpha=0.6)
+plt.xlabel('Year')
+plt.ylabel('Annual Mean Precipitation (mm)')
+plt.title('Annual Mean Precipitation over a 10 year period')
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(10, 6))
+plt.plot(range(1985,1996), yearly_mean_temp, marker='s',  label='Yearly Mean Temp Per Year', color='red', alpha=0.6)
+plt.xlabel('Year')
+plt.ylabel('Annual Mean Temperature (°C)')
+plt.title('Annual Mean Temperature over a 10 year period')
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+#This is for Question 4 
+yearly_precipitation = []
+yearly_mean_temp = []
+for year in range(1985, 1996):
+    year_df = df[df['(2)Date'].dt.year == year]
+    year_mean_temp = year_df['Mean_Temp'].astype(float).mean()
+    year_precipitation = year_df['(5)Rain'].astype(float).sum()
+    
     yearly_mean_temp.append(year_mean_temp)
     yearly_precipitation.append(year_precipitation)
 
+x= list(range(1985, 1996))
+y=yearly_precipitation
+slope, intercept = np.polyfit(x, y, 1)
+predicted_y = slope * np.array(x) + intercept
 plt.figure(figsize=(10, 6))
-plt.scatter(yearly_mean_temp, yearly_precipitation, label='Yearly Mean Temp / Yearly Precipitation', color='blue', alpha=0.6)
+plt.plot(x, y,marker='o',  label='Annual Precipitation', color='red', alpha=0.6)
+plt.plot(x, predicted_y, color='blue', label='Trend Line', linewidth=1)
+plt.xlabel('Year')
+plt.ylabel('Annual Total Precipitation (mm)')
+plt.title('Total Precipitation/Year Trend Plot')
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
 
-for year, x, y in zip(range(1985, 1996), yearly_mean_temp, yearly_precipitation):
-    plt.text(x, y, year, fontsize=10, ha='left', va='bottom')
-
-plt.xlabel('Yearly Temperature Mean (°C)')
-plt.ylabel('Yearly Precipitation (mm)')
-plt.title('Yearly Temperature Mean and Precipitation')
+x= list(range(1985, 1996))
+y=yearly_mean_temp
+slope, intercept = np.polyfit(x, y, 1)
+predicted_y = slope * np.array(x) + intercept
+plt.figure(figsize=(10, 6))
+plt.plot(x, y,marker='s',  label='Annual Mean Temp', color='red', alpha=0.6)
+plt.plot(x, predicted_y, color='blue', label='Trend Line', linewidth=1)
+plt.xlabel('Year')
+plt.ylabel('Annual Mean Temperature (°C)')
+plt.title('Mean Temperature/Year Trend Plot')
 plt.xticks(rotation=45)
 plt.grid(True)
 plt.legend()
